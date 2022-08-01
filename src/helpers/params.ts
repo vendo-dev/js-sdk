@@ -4,17 +4,17 @@ type Token = {
 }
 
 const prepareParamsFromOptions = (options: any, params?: Array<string>) => {
-  let token: Token = {}
-  let bodyParams: any = options
-  let pathParams: any = {}
+  const token: Token = {}
+  const bodyParams: any = options
+  const pathParams: any = {}
 
-  if (bodyParams.bearer_token) {
-    token.bearerToken = bodyParams.bearer_token
+  if (bodyParams?.bearer_token || bodyParams?.bearerToken) {
+    token.bearerToken = bodyParams.bearer_token || bodyParams.bearerToken
     delete bodyParams.bearer_token
   }
 
-  if (bodyParams.order_token) {
-    token.orderToken = bodyParams.order_token
+  if (bodyParams?.order_token || bodyParams?.orderToken) {
+    token.orderToken = bodyParams.order_token || bodyParams.orderToken
     delete bodyParams.order_token
   }
 
