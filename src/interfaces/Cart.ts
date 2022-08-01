@@ -1,9 +1,5 @@
 import type { WithCommonOptions } from './WithCommonOptions'
 
-import type * as RestCheckoutTypes from './endpoints/CartClass'
-
-export * from './endpoints/CartClass'
-
 export type ShowOptions = WithCommonOptions<{ suggestToken: true; suggestQuery: true }>
 
 export type CreateOptions = WithCommonOptions<{
@@ -18,7 +14,13 @@ export type AddItemOptions = WithCommonOptions<
     suggestToken: true
     suggestQuery: true
   },
-  RestCheckoutTypes.AddItem
+  {
+    variant_id: string
+    quantity: number
+    options?: {
+      [key: string]: string
+    }   
+  }
 >
 
 export type RemoveItemOptions = WithCommonOptions<{ suggestToken: true; suggestQuery: true }, { id: string }>
@@ -29,12 +31,15 @@ export type RemoveOptions = WithCommonOptions<{ suggestToken: true }>
 
 export type SetQuantityOptions = WithCommonOptions<
   { suggestToken: true; suggestQuery: true },
-  RestCheckoutTypes.SetQuantity
+  {
+    line_item_id: string
+    quantity: number
+  }
 >
 
 export type ApplyCouponCodeOptions = WithCommonOptions<
   { suggestToken: true; suggestQuery: true },
-  RestCheckoutTypes.CouponCode
+  { coupon_code: string }
 >
 
 export type RemoveCouponCodeOptions = WithCommonOptions<{ suggestToken: true; suggestQuery: true }, { code?: string }>
@@ -43,15 +48,15 @@ export type RemoveAllCouponsOptions = WithCommonOptions<{ suggestToken: true; su
 
 export type EstimateShippingRatesOptions = WithCommonOptions<
   { suggestToken: true; suggestQuery: true },
-  RestCheckoutTypes.EstimateShippingRates
+  { country_iso: string }
 >
 
 export type AssociateGuestCartOptions = WithCommonOptions<
   { suggestToken: true; suggestQuery: true },
-  RestCheckoutTypes.AssociateCart
+  { guest_order_token: string }
 >
 
 export type ChangeCurrencyOptions = WithCommonOptions<
   { suggestToken: true; suggestQuery: true },
-  RestCheckoutTypes.ChangeCurrency
+  { new_currency: string }
 >

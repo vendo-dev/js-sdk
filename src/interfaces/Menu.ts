@@ -27,16 +27,6 @@ export interface MenuResult extends ResultResponse<Menu> {}
 
 export interface MenusResult extends ResultResponse<Menus> {}
 
-/**
- * @deprecated Use {@link ListOptions} instead.
- */
-export interface MenusList extends IQuery {
-  locale?: string
-  filter?: IQuery['filter'] & {
-    location?: string
-  }
-}
-
-export type ListOptions = WithCommonOptions<{ suggestQuery: true }, MenusList>
+export type ListOptions = WithCommonOptions<{ suggestQuery: true }, { locale?: string; filter?: IQuery['filter'] & { location?: string } }>
 
 export type ShowOptions = WithCommonOptions<{ suggestQuery: true }, { id: string }>

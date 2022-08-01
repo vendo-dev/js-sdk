@@ -1,6 +1,5 @@
 import type { IAddress } from './attributes/Address'
 import type { JsonApiDocument, JsonApiListResponse, JsonApiSingleResponse } from './JsonApi'
-import type { IQuery } from './Query'
 import type { IRelationships } from './Relationships'
 import type { ResultResponse } from './ResultResponse'
 import type { WithCommonOptions } from './WithCommonOptions'
@@ -24,40 +23,6 @@ export interface IAccount extends JsonApiSingleResponse {
 }
 
 export interface IAccountResult extends ResultResponse<IAccount> {}
-
-export interface IAccountConfirmation {
-  data: {
-    state: string
-  }
-}
-
-export interface IAccountConfirmationResult extends ResultResponse<IAccountConfirmation> {}
-
-/**
- * @deprecated Use {@link ForgotPasswordOptions} instead.
- */
-export interface ForgotPasswordParams extends IQuery {
-  user: {
-    email: string
-  }
-}
-
-/**
- * @deprecated Use {@link ResetPasswordOptions} instead.
- */
-export interface ResetPasswordParams extends IQuery {
-  user: {
-    password: string
-    password_confirmation: string
-  }
-}
-
-/**
- * @deprecated Use {@link CreateAddressOptions} instead.
- */
-export interface AccountAddressParams extends IQuery {
-  address: IAddress
-}
 
 export interface AccountAddressAttr extends JsonApiDocument {
   attributes: IAddress
@@ -118,12 +83,6 @@ export type CreateOptions = WithCommonOptions<
   }
 >
 
-export type ConfirmOptions = WithCommonOptions<null, { confirmation_token: string }>
-
-export type ForgotPasswordOptions = WithCommonOptions<null, ForgotPasswordParams>
-
-export type ResetPasswordOptions = WithCommonOptions<null, ResetPasswordParams & { reset_password_token: string }>
-
 export type UpdateOptions = WithCommonOptions<
   { suggestToken: true; onlyAccountToken: true },
   {
@@ -148,12 +107,12 @@ export type ShowAddressOptions = WithCommonOptions<
 
 export type CreateAddressOptions = WithCommonOptions<
   { suggestToken: true; onlyAccountToken: true; suggestQuery: true },
-  AccountAddressParams
+  { address: IAddress }
 >
 
 export type RemoveAddressOptions = WithCommonOptions<{ suggestToken: true; onlyAccountToken: true }, { id: string }>
 
 export type UpdateAddressOptions = WithCommonOptions<
   { suggestToken: true; onlyAccountToken: true },
-  AccountAddressParams & { id: string }
+  { address: IAddress }
 >
