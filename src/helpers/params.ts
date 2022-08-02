@@ -1,10 +1,5 @@
-type Token = {
-  bearerToken?: string
-  orderToken?: string
-}
-
 const prepareParamsFromOptions = (options: any, params?: Array<string>) => {
-  const token: Token = {}
+  const token: any = {}
   const bodyParams: any = options
   const pathParams: any = {}
 

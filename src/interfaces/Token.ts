@@ -1,26 +1,16 @@
 import { ResultResponse } from './ResultResponse'
 
-/**
- * @deprecated Use
- * {@link RequiredAnyToken},
- * {@link OptionalAnyToken},
- * {@link RequiredAccountToken},
- * {@link OptionalAccountToken} or
- * {@link WithCommonOptions} specific to the endpoint you're attempting to call
- * instead.
- */
-export interface IToken {
-  orderToken?: string
-  bearerToken?: string
-}
-
 export type RequiredAnyToken =
-  | { order_token: string; bearer_token?: never }
-  | { order_token?: never; bearer_token: string }
+  | { order_token: string; bearer_token?: never; orderToken?: never; bearerToken?: never }
+  | { order_token?: never; bearer_token: string; orderToken?: never; bearerToken?: never }
+  | { order_token?: never; bearer_token?: never; orderToken: string; bearerToken?: never }
+  | { order_token?: never; bearer_token?: never; orderToken?: never; bearerToken: string }
 
 export type OptionalAnyToken =
-  | { order_token?: string; bearer_token?: never }
-  | { order_token?: never; bearer_token?: string }
+  | { order_token?: string; bearer_token?: never; orderToken?: never; bearerToken?: never }
+  | { order_token?: never; bearer_token?: string; orderToken?: never; bearerToken?: never }
+  | { order_token?: never; bearer_token?: never; orderToken?: string; bearerToken?: never }
+  | { order_token?: never; bearer_token?: never; orderToken?: never; bearerToken?: string }
 
 export type RequiredAccountToken = { bearer_token: string }
 

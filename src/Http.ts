@@ -13,7 +13,7 @@ import type { ErrorType } from './interfaces/errors/ErrorType'
 import type { FetchConfig, HttpMethod, ResponseParsing } from './interfaces/FetchConfig'
 import type { JsonApiResponse } from './interfaces/JsonApi'
 import type { ResultResponse } from './interfaces/ResultResponse'
-import type { IToken } from './interfaces/Token'
+import type { OptionalAnyToken } from './interfaces/Token'
 
 export type EndpointOptions = {
   fetcher: Fetcher
@@ -29,7 +29,7 @@ export default class Http {
   protected async spreeResponse<ResponseType = JsonApiResponse>(
     method: HttpMethod,
     url: string,
-    tokens: IToken = {},
+    tokens: OptionalAnyToken = {},
     params: any = {},
     responseParsing: ResponseParsing = 'automatic'
   ): Promise<ResultResponse<ResponseType>> {
@@ -100,7 +100,7 @@ export default class Http {
     }
   }
 
-  protected spreeOrderHeaders(tokens: IToken): { [headerName: string]: string } {
+  protected spreeOrderHeaders(tokens: OptionalAnyToken): { [headerName: string]: string } {
     const header = {}
 
     if (tokens.orderToken) {
