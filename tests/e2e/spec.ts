@@ -286,6 +286,59 @@ const createServerVersionInTheServerTests = ({
   })
 }
 
+const createVendoSpecificTests = ({
+  host,
+  fetcherType
+}: {
+  host: string
+  fetcherType: 'axios' | 'fetch'
+}) => {
+  describe('Vendo specific tests', () => {
+    beforeEach(function () {
+      let createFetcher
+
+      switch (fetcherType) {
+        case 'axios':
+          createFetcher = createAxiosFetcher
+          break
+        case 'fetch':
+          createFetcher = createFetchFetcher
+          break
+        default:
+          throw new Error(`${fetcherType} not recognized.`)
+      }
+
+      const client = makeClient({ host, createFetcher })
+
+      cy.wrap({ value: client }).as('clientRef')
+    })
+
+    it('lists brands', function () {
+      const client: Client = this.clientRef.value
+
+      cy.wrap(null)
+        .then(function () {
+          return client.brands.list()
+        })
+        .then(function (brandsListResponse) {
+          expect(brandsListResponse.isSuccess()).to.be.true
+        })
+    })
+
+    it('lists categories', function () {
+      const client: Client = this.clientRef.value
+
+      cy.wrap(null)
+        .then(function () {
+          return client.categories.list()
+        })
+        .then(function (categoriesListResponse) {
+          expect(categoriesListResponse.isSuccess()).to.be.true
+        })
+    })
+  })
+}
+
 describe('using Spree SDK', function () {
   before(function () {
     cy.fixture('order-full-address').as('orderFullAddress')
@@ -302,4 +355,10 @@ describe('using Spree SDK', function () {
   createServerVersionInTheServerTests({ host: 'http://express:5000', fetcherType: 'axios' })
 
   createServerVersionInTheServerTests({ host: 'http://express:5000', fetcherType: 'fetch' })
+
+  //TODO: Use docker container with Vendo instead
+  createVendoSpecificTests({ host: 'https://storeabc.vendo.dev', fetcherType: 'axios' })
+
+  //TODO: Use docker container with Vendo instead
+  createVendoSpecificTests({ host: 'https://storeabc.vendo.dev', fetcherType: 'fetch' })
 })
