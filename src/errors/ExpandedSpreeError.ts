@@ -30,32 +30,4 @@ export default class ExpandedSpreeError extends BasicSpreeError {
       return acc
     }, {})
   }
-
-  /**
-   * @deprecated This method will be removed in future versions.
-   * Use optional chaining, lodash/get, Final Form's getIn or another
-   * 3rd party library to recreate the behavior of this method.
-   */
-  public getErrors(path: string[]): Errors | FieldErrors | null {
-    let pathPartIndex = 0
-    let node: any = this.errors
-    let pathPossible = true
-
-    while (pathPartIndex < path.length && pathPossible) {
-      const pathPart = path[pathPartIndex]
-
-      if (!(pathPart in Object(node))) {
-        pathPossible = false
-      } else {
-        node = node[pathPart]
-        pathPartIndex += 1
-      }
-    }
-
-    if (!pathPossible) {
-      return null
-    }
-
-    return node
-  }
 }

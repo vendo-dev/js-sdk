@@ -20,10 +20,6 @@ const endpoints = {
   cartRemoveCodePath: (code?: string): string =>
     `${storefrontPath}/cart/remove_coupon_code/${encodeURIComponent(code)}`,
   cartRemoveAllCoupons: (): string => `${storefrontPath}/cart/remove_coupon_code`,
-  /**
-   * @deprecated Use {@link cartEstimateShippingRatesPath} instead.
-   */
-  cartEstimateShippingMethodsPath: (): string => `${storefrontPath}/cart/estimate_shipping_rates`,
   cartEstimateShippingRatesPath: (): string => `${storefrontPath}/cart/estimate_shipping_rates`,
   cartAssociatePath: (): string => `${storefrontPath}/cart/associate`,
   cartChangeCurrencyPath: (): string => `${storefrontPath}/cart/change_currency`,
@@ -34,10 +30,6 @@ const endpoints = {
   checkoutAddStoreCreditsPath: (): string => `${storefrontPath}/checkout/add_store_credit`,
   checkoutRemoveStoreCreditsPath: (): string => `${storefrontPath}/checkout/remove_store_credit`,
   checkoutPaymentMethodsPath: (): string => `${storefrontPath}/checkout/payment_methods`,
-  /**
-   * @deprecated Use {@link checkoutShippingRatesPath} instead.
-   */
-  checkoutShippingMethodsPath: (): string => `${storefrontPath}/checkout/shipping_rates`,
   checkoutShippingRatesPath: (): string => `${storefrontPath}/checkout/shipping_rates`,
   checkoutSelectShippingMethodPath: (): string => `${storefrontPath}/checkout/select_shipping_method`,
   checkoutAddPaymentPath: (): string => `${storefrontPath}/checkout/create_payment`,
