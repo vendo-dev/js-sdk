@@ -12,7 +12,7 @@ const findDocument = <DocumentType extends JsonApiDocument>(
 
   return (
     (spreeSuccessResponse.included.find(
-      (includedObject) => includedObject.type === relationType.type && includedObject.id === relationType.id
+      (includedObject) => includedObject?.type === relationType?.type && includedObject?.id === relationType?.id
     ) as DocumentType) || null
   )
 }
@@ -26,9 +26,10 @@ const findRelationshipDocuments = <DocumentType extends JsonApiDocument>(
     return []
   }
 
+  const isRelationshipPresent = relationshipName in sourceDocument.relationships
   const oneOrManyDocumentReferences = (sourceDocument.relationships[relationshipName] || {}).data
 
-  if (!oneOrManyDocumentReferences) {
+  if (!isRelationshipPresent) {
     throw new DocumentRelationshipError(`Incorrect relationship ${relationshipName}.`)
   }
 
