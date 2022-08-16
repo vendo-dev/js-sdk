@@ -137,6 +137,31 @@ const createTests = function () {
         expect(paymentMethodsResponse.isSuccess()).to.be.true
       })
   })
+
+  it('returns errors with code and message', function () {
+    const client: Client = this.clientRef.value
+
+    cy.wrap(null)
+      .then(function () {
+        return result.extractSuccess(client.cart.create())
+      })
+      .then(function (cartCreateResponse) {
+        const orderToken = cartCreateResponse.data.attributes.token
+
+        return client.wishlists.updateWishedItem({
+          order_token: orderToken,
+          wishlist_token: 'wishlist_token',
+          id: 'item_id'
+        })
+      })
+      .then(function(wishlistsResponse) {
+        const failedResponse = wishlistsResponse.fail()
+
+        expect(wishlistsResponse.isFail()).to.be.true
+        expect(failedResponse).to.have.property('code')
+        expect(failedResponse).to.have.property('message')
+      })
+  })
 }
 
 const createServerVersionInTheBrowserTests = ({
@@ -334,6 +359,38 @@ const createVendoSpecificTests = ({
         })
         .then(function (categoriesListResponse) {
           expect(categoriesListResponse.isSuccess()).to.be.true
+        })
+      })
+
+    it('test', function () {
+      const client: Client = this.clientRef.value
+
+      cy.wrap(null)
+        .then(function () {
+          return result.extractSuccess(client.cart.create())
+        })
+        .then(function (cartCreateResponse) {
+          const { token: order_token, number: order_number } = cartCreateResponse.data.attributes
+
+          return cy
+            .wrap(null)
+            .then(function () {
+              return result.extractSuccess(client.products.list({ include: 'default_variant,brand' }))
+            })
+            .then(function (variantsResponse) {
+              const variantId = jsonApi.findSingleRelationshipDocument(
+                variantsResponse,
+                variantsResponse.data[0],
+                'default_variant'
+              ).id
+
+              const brand = jsonApi.findSingleRelationshipDocument(
+                variantsResponse,
+                variantsResponse.data[0],
+                'brand'
+              )
+            })
+        
         })
     })
   })
