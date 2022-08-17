@@ -67,9 +67,12 @@ Developed and maintained by:
   - [Products](#products)
     - [list](#list)
     - [show](#show-1)
-  - [Taxons](#taxons)
+  - [Brands](#brands)
     - [list](#list-1)
     - [show](#show-2)
+  - [Categories](#categories)
+    - [list](#list-7)
+    - [show](#show-8)
   - [Vendors](#vendors)
     - [list](#list-2)
     - [show](#show-3)
@@ -217,11 +220,7 @@ Available `SpreeSDKError` subtypes:
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `MisconfigurationError` | Signifies the SDK's `Client` was created with improper options. Make sure the values of `host` and other options (if any) provided to `Client` have the correct format.                                                                                                                                                                    |
 | `NoResponseError`       | Spree store could not be reached. Ensure it's running and available under the `host` address provided to the `Client` instance.                                                                                                                                                                                                            |
-| `SpreeError`            | Spree responded with an error. To debug the issue, check the error's `serverResponse` field. It contains details about the response from Spree, such as the HTTP status code and headers.                                                                                                                                                  |
-| `BasicSpreeError`       | Extends `SpreeError` with a `summary` field provided by Spree and containing a summary of the issue.                                                                                                                                                                                                                                       |
-| `ExpandedSpreeError`    | Extends `BasicSpreeError` with a `errors` field. `errors` contains a detailed explanation of the issue, ex. all the validation errors when trying to add shipping details to a Spree order. The `getErrors` method can be used to retrieve a concrete value inside `errors`, ex. `expSpreeError.getErrors(['bill_address', 'firstname'])`. |
-
-The specific type of error returned by `fail()` can be determined using [`instanceof`][3], ex. `if(response.fail() instanceof BasicSpreeError){...}`.
+| `SpreeError`            | Spree responded with an error. To debug the issue, check the error's `serverResponse` field. It contains details about the response from Spree, such as the HTTP status code and error message.                                                                                                                                                  |
 
 ## Tokens
 
@@ -1630,33 +1629,11 @@ const response = await client.products.show({
 })
 ```
 
-## Taxons
+## Brands
 
-### [`list`][53]
+### `list`
 
-Returns a list of Taxons.
-
-**Success response schema:** [Success schema](#success-schema)
-
-**Failure response schema:** [Error schema](#error-schema)
-
-**Example:**
-
-```ts
-const response = await client.taxons.list()
-```
-
-### [`show`][54]
-
-Returns a single Taxon.
-
-**Parameters schema:**
-
-```ts
-{
-  id: string
-}
-```
+Returns a list of brands
 
 **Success response schema:** [Success schema](#success-schema)
 
@@ -1665,7 +1642,55 @@ Returns a single Taxon.
 **Example:**
 
 ```ts
-const products = await client.taxons.show({ id: '1' })
+const brands = await client.brands.list()
+```
+
+### `show`
+
+Returns a single brand
+
+**Success response schema:** [Success schema](#success-schema)
+
+**Failure response schema:** [Error schema](#error-schema)
+
+**Example:**
+
+```ts
+const brand = await client.brands.show({
+  brand_permalink: '980a80d5-f51b-4065-b3a0-622fc5cb6bf6'
+})
+```
+
+## Categories
+
+### `list`
+
+Returns a list of categories
+
+**Success response schema:** [Success schema](#success-schema)
+
+**Failure response schema:** [Error schema](#error-schema)
+
+**Example:**
+
+```ts
+const categories = await client.categories.list()
+```
+
+### `show`
+
+Returns a single category
+
+**Success response schema:** [Success schema](#success-schema)
+
+**Failure response schema:** [Error schema](#error-schema)
+
+**Example:**
+
+```ts
+const category = await client.categories.show({
+  category_permalink: '980a80d5-f51b-4065-b3a0-622fc5cb6bf6'
+})
 ```
 
 ## Vendors
@@ -2396,7 +2421,6 @@ We are [available for hire][spark].
 [50]: https://api.spreecommerce.org/docs/api-v2/b3A6MjYyODA2NTY-create-new-payment
 [51]: https://api.spreecommerce.org/docs/api-v2/b3A6MzE0Mjc2Mg-list-all-products
 [52]: https://api.spreecommerce.org/docs/api-v2/b3A6MTgwNTI4ODE-retrieve-a-product
-[53]: https://api.spreecommerce.org/docs/api-v2/b3A6MzE0Mjc2NA-list-all-taxons
 [54]: https://api.spreecommerce.org/docs/api-v2/b3A6MTgwNTI4ODM-retrieve-a-taxon
 [55]: https://api.spreecommerce.org/docs/api-v2/b3A6MjE0NTY5Mzg-list-all-wishlists
 [56]: https://api.spreecommerce.org/docs/api-v2/b3A6MjE0NTY5NDA-retrieve-a-wishlist

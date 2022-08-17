@@ -137,6 +137,31 @@ const createTests = function () {
         expect(paymentMethodsResponse.isSuccess()).to.be.true
       })
   })
+
+  it('returns errors with code and message', function () {
+    const client: Client = this.clientRef.value
+
+    cy.wrap(null)
+      .then(function () {
+        return result.extractSuccess(client.cart.create())
+      })
+      .then(function (cartCreateResponse) {
+        const orderToken = cartCreateResponse.data.attributes.token
+
+        return client.wishlists.updateWishedItem({
+          order_token: orderToken,
+          wishlist_token: 'wishlist_token',
+          id: 'item_id'
+        })
+      })
+      .then(function(wishlistsResponse) {
+        const failedResponse = wishlistsResponse.fail()
+
+        expect(wishlistsResponse.isFail()).to.be.true
+        expect(failedResponse).to.have.property('code')
+        expect(failedResponse).to.have.property('message')
+      })
+  })
 }
 
 const createServerVersionInTheBrowserTests = ({
@@ -286,6 +311,91 @@ const createServerVersionInTheServerTests = ({
   })
 }
 
+const createVendoSpecificTests = ({
+  host,
+  fetcherType
+}: {
+  host: string
+  fetcherType: 'axios' | 'fetch'
+}) => {
+  describe('Vendo specific tests', () => {
+    beforeEach(function () {
+      let createFetcher
+
+      switch (fetcherType) {
+        case 'axios':
+          createFetcher = createAxiosFetcher
+          break
+        case 'fetch':
+          createFetcher = createFetchFetcher
+          break
+        default:
+          throw new Error(`${fetcherType} not recognized.`)
+      }
+
+      const client = makeClient({ host, createFetcher })
+
+      cy.wrap({ value: client }).as('clientRef')
+    })
+
+    it('lists brands', function () {
+      const client: Client = this.clientRef.value
+
+      cy.wrap(null)
+        .then(function () {
+          return client.brands.list()
+        })
+        .then(function (brandsListResponse) {
+          expect(brandsListResponse.isSuccess()).to.be.true
+        })
+    })
+
+    it('lists categories', function () {
+      const client: Client = this.clientRef.value
+
+      cy.wrap(null)
+        .then(function () {
+          return client.categories.list()
+        })
+        .then(function (categoriesListResponse) {
+          expect(categoriesListResponse.isSuccess()).to.be.true
+        })
+      })
+
+    it('test', function () {
+      const client: Client = this.clientRef.value
+
+      cy.wrap(null)
+        .then(function () {
+          return result.extractSuccess(client.cart.create())
+        })
+        .then(function (cartCreateResponse) {
+          const { token: order_token, number: order_number } = cartCreateResponse.data.attributes
+
+          return cy
+            .wrap(null)
+            .then(function () {
+              return result.extractSuccess(client.products.list({ include: 'default_variant,brand' }))
+            })
+            .then(function (variantsResponse) {
+              const variantId = jsonApi.findSingleRelationshipDocument(
+                variantsResponse,
+                variantsResponse.data[0],
+                'default_variant'
+              ).id
+
+              const brand = jsonApi.findSingleRelationshipDocument(
+                variantsResponse,
+                variantsResponse.data[0],
+                'brand'
+              )
+            })
+        
+        })
+    })
+  })
+}
+
 describe('using Spree SDK', function () {
   before(function () {
     cy.fixture('order-full-address').as('orderFullAddress')
@@ -302,4 +412,10 @@ describe('using Spree SDK', function () {
   createServerVersionInTheServerTests({ host: 'http://express:5000', fetcherType: 'axios' })
 
   createServerVersionInTheServerTests({ host: 'http://express:5000', fetcherType: 'fetch' })
+
+  //TODO: Use docker container with Vendo instead
+  createVendoSpecificTests({ host: 'https://storeabc.vendo.dev', fetcherType: 'axios' })
+
+  //TODO: Use docker container with Vendo instead
+  createVendoSpecificTests({ host: 'https://storeabc.vendo.dev', fetcherType: 'fetch' })
 })

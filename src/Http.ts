@@ -1,9 +1,6 @@
 import {
-  BasicSpreeError,
-  ExpandedSpreeError,
   MisconfigurationError,
   NoResponseError,
-  SpreeError,
   SpreeSDKError
 } from './errors'
 import FetchError from './errors/FetchError'
@@ -13,7 +10,8 @@ import type { ErrorType } from './interfaces/errors/ErrorType'
 import type { FetchConfig, HttpMethod, ResponseParsing } from './interfaces/FetchConfig'
 import type { JsonApiResponse } from './interfaces/JsonApi'
 import type { ResultResponse } from './interfaces/ResultResponse'
-import type { IToken } from './interfaces/Token'
+import type { OptionalAnyToken } from './interfaces/Token'
+import type { SpreeError } from './errors'
 
 export type EndpointOptions = {
   fetcher: Fetcher
@@ -29,7 +27,7 @@ export default class Http {
   protected async spreeResponse<ResponseType = JsonApiResponse>(
     method: HttpMethod,
     url: string,
-    tokens: IToken = {},
+    tokens: OptionalAnyToken = {},
     params: any = {},
     responseParsing: ResponseParsing = 'automatic'
   ): Promise<ResultResponse<ResponseType>> {
@@ -52,30 +50,15 @@ export default class Http {
     }
   }
 
-  /**
-   * The HTTP error code returned by Spree is not indicative of its response shape.
-   * This function determines the information provided by Spree and uses everything available.
-   */
-  protected classifySpreeError(error: FetchError): ErrorType {
-    const { error: errorSummary, errors } = error.data
-
-    if (typeof errorSummary === 'string') {
-      if (typeof errors === 'object') {
-        return 'full'
-      }
-      return 'basic'
-    }
-    return 'limited'
-  }
-
-  protected processError(error: Error): SpreeSDKError {
-    if (error instanceof FetchError) {
-      if (error.response) {
+  protected processError(error: Error): any {
+    if ((error as FetchError)?.response) {
+      const fetchError = (error as FetchError)
+      if (fetchError.response) {
         // Error from Spree outside HTTP 2xx codes
-        return this.processSpreeError(error)
+        return this.processSpreeError(fetchError)
       }
 
-      if (error.request) {
+      if (fetchError.request) {
         // No response received from Spree
         return new NoResponseError()
       }
@@ -88,19 +71,12 @@ export default class Http {
   }
 
   protected processSpreeError(error: FetchError): SpreeError {
-    const { error: errorSummary, errors } = error.data
-    const errorType = this.classifySpreeError(error)
+    const { response: { status: code }, data: { error: message } } = error
 
-    if (errorType === 'full') {
-      return new ExpandedSpreeError(error.response, errorSummary, errors)
-    } else if (errorType === 'basic') {
-      return new BasicSpreeError(error.response, errorSummary)
-    } else {
-      return new SpreeError(error.response)
-    }
+    return { code, message }
   }
 
-  protected spreeOrderHeaders(tokens: IToken): { [headerName: string]: string } {
+  protected spreeOrderHeaders(tokens: OptionalAnyToken): { [headerName: string]: string } {
     const header = {}
 
     if (tokens.orderToken) {

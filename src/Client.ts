@@ -1,7 +1,9 @@
 import {
   Account,
   Authentication,
+  Brands,
   Cart,
+  Categories,
   Checkout,
   Countries,
   DigitalAssets,
@@ -9,7 +11,6 @@ import {
   Order,
   Pages,
   Products,
-  Taxons,
   Vendors,
   Wishlists
 } from './endpoints'
@@ -18,7 +19,9 @@ import type { CreateFetcherConfig, Fetcher, IClientConfig } from './interfaces/C
 class Client {
   public account: Account
   public authentication: Authentication
+  public brands: Brands
   public cart: Cart
+  public categories: Categories
   public checkout: Checkout
   public countries: Countries
   public digitalAssets: DigitalAssets
@@ -26,7 +29,6 @@ class Client {
   public order: Order
   public pages: Pages
   public products: Products
-  public taxons: Taxons
   public vendors: Vendors
   public wishlists: Wishlists
 
@@ -55,7 +57,9 @@ class Client {
   protected addEndpoints(): void {
     this.account = this.makeAccount()
     this.authentication = this.makeAuthentication()
+    this.brands = this.makeBrands()
     this.cart = this.makeCart()
+    this.categories = this.makeCategories()
     this.checkout = this.makeCheckout()
     this.countries = this.makeCountries()
     this.digitalAssets = this.makeDigitalAssets()
@@ -63,7 +67,6 @@ class Client {
     this.order = this.makeOrder()
     this.pages = this.makePages()
     this.products = this.makeProducts()
-    this.taxons = this.makeTaxons()
     this.vendors = this.makeVendors()
     this.wishlists = this.makeWishlists()
   }
@@ -76,8 +79,16 @@ class Client {
     return new Authentication({ fetcher: this.fetcher })
   }
 
+  protected makeBrands(): Brands {
+    return new Brands({ fetcher: this.fetcher })
+  }
+
   protected makeCart(): Cart {
     return new Cart({ fetcher: this.fetcher })
+  }
+
+  protected makeCategories(): Categories {
+    return new Categories({ fetcher: this.fetcher })
   }
 
   protected makeCheckout(): Checkout {
@@ -98,10 +109,6 @@ class Client {
 
   protected makeProducts(): Products {
     return new Products({ fetcher: this.fetcher })
-  }
-
-  protected makeTaxons(): Taxons {
-    return new Taxons({ fetcher: this.fetcher })
   }
 
   protected makeDigitalAssets(): DigitalAssets {

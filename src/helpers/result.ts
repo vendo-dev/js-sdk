@@ -47,14 +47,6 @@ const toJson = <F extends Error, S>(result: Result<F, S>): { type: string; subty
   }
 }
 
-const castError = (error: { name: string; message: string; stack? }): errors.SpreeSDKError => {
-  if (!(error.name in errors)) {
-    throw new CastError('Error not recognized')
-  }
-
-  return Object.assign(Object.create(errors[error.name].prototype), error)
-}
-
 /**
  * Converts JSON to a Result instance.
  * If the JSON represents a fail, converts the error into an instance of SpreeSDKError its subtype.
@@ -64,7 +56,7 @@ const fromJson = (json: { [key: string]: any }): Result<errors.SpreeSDKError, an
     if (json.subtype === 'success') {
       return makeSuccess(json.value)
     } else if (json.subtype === 'fail') {
-      return makeFail(castError(json.value))
+      return makeFail(json.value)
     } else {
       throw new DeserializeError('Expected success or fail subtype.')
     }
