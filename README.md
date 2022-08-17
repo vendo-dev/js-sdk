@@ -67,9 +67,12 @@ Developed and maintained by:
   - [Products](#products)
     - [list](#list)
     - [show](#show-1)
-  - [Taxons](#taxons)
+  - [Brands](#brands)
     - [list](#list-1)
     - [show](#show-2)
+  - [Categories](#categories)
+    - [list](#list-7)
+    - [show](#show-8)
   - [Vendors](#vendors)
     - [list](#list-2)
     - [show](#show-3)
@@ -1626,6 +1629,70 @@ const response = await client.products.show({
 })
 ```
 
+## Brands
+
+### `list`
+
+Returns a list of brands
+
+**Success response schema:** [Success schema](#success-schema)
+
+**Failure response schema:** [Error schema](#error-schema)
+
+**Example:**
+
+```ts
+const brands = await client.brands.list()
+```
+
+### `show`
+
+Returns a single brand
+
+**Success response schema:** [Success schema](#success-schema)
+
+**Failure response schema:** [Error schema](#error-schema)
+
+**Example:**
+
+```ts
+const brand = await client.brands.show({
+  brand_permalink: '980a80d5-f51b-4065-b3a0-622fc5cb6bf6'
+})
+```
+
+## Categories
+
+### `list`
+
+Returns a list of categories
+
+**Success response schema:** [Success schema](#success-schema)
+
+**Failure response schema:** [Error schema](#error-schema)
+
+**Example:**
+
+```ts
+const categories = await client.categories.list()
+```
+
+### `show`
+
+Returns a single category
+
+**Success response schema:** [Success schema](#success-schema)
+
+**Failure response schema:** [Error schema](#error-schema)
+
+**Example:**
+
+```ts
+const category = await client.categories.show({
+  category_permalink: '980a80d5-f51b-4065-b3a0-622fc5cb6bf6'
+})
+```
+
 ## Vendors
 
 The multi-vendor marketplace feature is only available via [Vendo](https://getvendo.com) - Spree as a Service offering, not in Spree open source. [Contact us](https://e98esoirr8c.typeform.com/contactvendo?typeform-source=github.com) for early access.
@@ -2354,7 +2421,6 @@ We are [available for hire][spark].
 [50]: https://api.spreecommerce.org/docs/api-v2/b3A6MjYyODA2NTY-create-new-payment
 [51]: https://api.spreecommerce.org/docs/api-v2/b3A6MzE0Mjc2Mg-list-all-products
 [52]: https://api.spreecommerce.org/docs/api-v2/b3A6MTgwNTI4ODE-retrieve-a-product
-[53]: https://api.spreecommerce.org/docs/api-v2/b3A6MzE0Mjc2NA-list-all-taxons
 [54]: https://api.spreecommerce.org/docs/api-v2/b3A6MTgwNTI4ODM-retrieve-a-taxon
 [55]: https://api.spreecommerce.org/docs/api-v2/b3A6MjE0NTY5Mzg-list-all-wishlists
 [56]: https://api.spreecommerce.org/docs/api-v2/b3A6MjE0NTY5NDA-retrieve-a-wishlist
